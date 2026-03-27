@@ -507,25 +507,28 @@ const ECGScreen = () => {
     if (!cameraRef.current) return;
     setScanning(true); setResult(null);
     try {
-      const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.1 });
-      const cleanBase64 = photo.base64.includes(',') ? photo.base64.split(',')[1] : photo.base64;
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
+      const cleanBase64 = photo.base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${GEMINI_API_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [
-            { text: "You are a professional cardiologist. Analyze this ECG strip. Identify rhythm, rate, and check for STEMI signs. Answer in professional Hebrew." },
+            { text: "אתה קרדיולוג מומחה. נתח את תרשים האק\"ג המצורף. זהה קצב לב, מהירות הולכה, ציר חשמלי, והאם יש עדות ל-STEMI, LBBB, הפרעות קצב, או ממצאים פתולוגיים אחרים. ספק ניתוח מקצועי מפורט בעברית רפואית." },
             { inline_data: { mime_type: "image/jpeg", data: cleanBase64 } }
           ]}],
           safetySettings: [{ category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }]
         })
       });
       const data = await response.json();
+      if (!response.ok) { console.log('Gemini API error:', JSON.stringify(data)); }
       if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
         setResult(data.candidates[0].content.parts[0].text);
       } else if (data.error) {
+        console.log('Gemini error detail:', JSON.stringify(data.error));
         setResult(`❌ שגיאת שרת מגוגל:\n${data.error.message}`);
       } else {
+        console.log('Unexpected response:', JSON.stringify(data));
         setResult(`⚠️ שגיאה לא צפויה:\n${JSON.stringify(data)}`);
       }
     } catch (e) { setResult(`❌ תקלה באפליקציה:\n${e.message}`); }
