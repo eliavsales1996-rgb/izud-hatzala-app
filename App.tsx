@@ -667,6 +667,12 @@ export default function App() {
   const [locationCoords, setLocationCoords] = useState<{lat: number, lon: number} | null>(null);
   const [isLoadingLoc, setIsLoadingLoc] = useState(false);
 
+  useEffect(() => {
+    if (Platform.OS === 'web' && typeof document !== 'undefined') {
+      document.title = "United Hatzalah";
+    }
+  }, []);
+
   const fetchLocation = async () => {
     setIsLoadingLoc(true);
     try {
@@ -718,7 +724,7 @@ export default function App() {
       
       <View style={styles.topHeader}>
         <TouchableOpacity onPress={() => setActiveTab('HOME')} style={styles.headerIcons}><Text style={styles.iconText}>🏠</Text></TouchableOpacity>
-        <View style={styles.logoContainer}><Text style={styles.headerTitle}>איחוד הצלה פלוס</Text><Image source={require('./assets/logo.jpg')} style={styles.logo} /></View>
+        <View style={styles.logoContainer}><Text style={styles.headerTitle}>United Hatzalah</Text><Image source={require('./assets/logo.jpg')} style={styles.logo} /></View>
       </View>
 
       <View style={styles.contentArea}>
