@@ -16,27 +16,31 @@ if (Platform.OS !== 'web') {
 }
 
 
-// --- מסד נתונים של בתי חולים בארץ (GPS) ---
+// --- מסד נתונים של בתי חולים בארץ (GPS + כתובת) ---
 const HOSPITALS_DATABASE = [
-  { name: "רמב\"ם", city: "חיפה", lat: 32.8333, lon: 34.9833 },
-  { name: "איכילוב (סוראסקי)", city: "תל אביב", lat: 32.0806, lon: 34.7892 },
-  { name: "שיבא (תל השומר)", city: "רמת גן", lat: 32.0461, lon: 34.8433 },
-  { name: "סורוקה", city: "באר שבע", lat: 31.2589, lon: 34.7978 },
-  { name: "הדסה עין כרם", city: "ירושלים", lat: 31.7649, lon: 35.1488 },
-  { name: "שערי צדק", city: "ירושלים", lat: 31.7698, lon: 35.1802 },
-  { name: "בילינסון (רבין)", city: "פתח תקווה", lat: 32.0897, lon: 34.8661 },
-  { name: "מאיר", city: "כפר סבא", lat: 32.1818, lon: 34.8967 },
-  { name: "שמיר (אסף הרופא)", city: "צריפין", lat: 31.9683, lon: 34.8378 },
-  { name: "קפלן", city: "רחובות", lat: 31.8814, lon: 34.8211 },
-  { name: "ברזילי", city: "אשקלון", lat: 31.6583, lon: 34.5606 },
-  { name: "זיו", city: "צפת", lat: 32.9616, lon: 35.5034 },
-  { name: "לניאדו", city: "נתניה", lat: 32.3422, lon: 34.8519 },
-  { name: "הלל יפה", city: "חדרה", lat: 32.4411, lon: 34.9002 },
-  { name: "פוריה (צפון)", city: "טבריה", lat: 32.7444, lon: 35.5261 },
-  { name: "המרכז הרפואי לגליל", city: "נהריה", lat: 33.0033, lon: 35.1056 },
-  { name: "יוספטל", city: "אילת", lat: 29.5606, lon: 34.9431 },
-  { name: "וולפסון", city: "חולון", lat: 32.0356, lon: 34.7608 },
-  { name: "העמק", city: "עפולה", lat: 32.6074, lon: 35.3038 }
+  { name: "רמב\"ם", city: "חיפה", address: "עיר הקריה ללא מחלקה 8, חיפה", lat: 32.8333, lon: 34.9833 },
+  { name: "איכילוב (סוראסקי)", city: "תל אביב", address: "וייצמן 6, תל אביב", lat: 32.0806, lon: 34.7892 },
+  { name: "שיבא (תל השומר)", city: "רמת גן", address: "דרך השלום, רמת גן", lat: 32.0461, lon: 34.8433 },
+  { name: "סורוקה", city: "באר שבע", address: "רגר 151, באר שבע", lat: 31.2589, lon: 34.7978 },
+  { name: "הדסה עין כרם", city: "ירושלים", address: "בית הכרם, ירושלים", lat: 31.7649, lon: 35.1488 },
+  { name: "שערי צדק", city: "ירושלים", address: "שמאי 12, ירושלים", lat: 31.7698, lon: 35.1802 },
+  { name: "בילינסון (רבין)", city: "פתח תקווה", address: "ז'בוטינסקי 39, פתח תקווה", lat: 32.0897, lon: 34.8661 },
+  { name: "מאיר", city: "כפר סבא", address: "טשרניחובסקי 59, כפר סבא", lat: 32.1818, lon: 34.8967 },
+  { name: "שמיר (אסף הרופא)", city: "צריפין", address: "צריפין, באר יעקב", lat: 31.9683, lon: 34.8378 },
+  { name: "קפלן", city: "רחובות", address: "קפלן 1, רחובות", lat: 31.8814, lon: 34.8211 },
+  { name: "ברזילי", city: "אשקלון", address: "הסתדרות הציונית 2, אשקלון", lat: 31.6583, lon: 34.5606 },
+  { name: "זיו", city: "צפת", address: "הנשיא 1, צפת", lat: 32.9616, lon: 35.5034 },
+  { name: "לניאדו", city: "נתניה", address: "וייצמן 1, נתניה", lat: 32.3422, lon: 34.8519 },
+  { name: "הלל יפה", city: "חדרה", address: "הלל יפה 1, חדרה", lat: 32.4411, lon: 34.9002 },
+  { name: "פוריה (צפון)", city: "טבריה", address: "כביש 90, טבריה", lat: 32.7444, lon: 35.5261 },
+  { name: "המרכז הרפואי לגליל", city: "נהריה", address: "גליל 2, נהריה", lat: 33.0033, lon: 35.1056 },
+  { name: "יוספטל", city: "אילת", address: "יוספטל 1, אילת", lat: 29.5606, lon: 34.9431 },
+  { name: "וולפסון", city: "חולון", address: "קרל נטר 62, חולון", lat: 32.0356, lon: 34.7608 },
+  { name: "העמק", city: "עפולה", address: "יצחק רבין 21, עפולה", lat: 32.6074, lon: 35.3038 },
+  { name: "הדסה הר הצופים", city: "ירושלים", address: "הר הצופים, ירושלים", lat: 31.7934, lon: 35.2426 },
+  { name: "מעיני הישועה", city: "בני ברק", address: "דבורת הנביאה 3, בני ברק", lat: 32.0889, lon: 34.8331 },
+  { name: "אסותא אשדוד", city: "אשדוד", address: "ז'בוטינסקי 7, אשדוד", lat: 31.8044, lon: 34.6553 },
+  { name: "גלילי (נהריה)", city: "נהריה", address: "קרלנו 27, נהריה", lat: 33.0175, lon: 35.0976 },
 ];
 
 function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -48,40 +52,139 @@ function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-// --- מסד נתונים של תרופות (מלא) ---
+// --- מסד נתונים של תרופות (מורחב) ---
 const DRUG_DATABASE = [
-  { brand: "אקמול, דקסמול, פאראמול", generic: "Paracetamol", category: "כאבים וחום", info: "שיכוך כאבים קלים עד בינוניים והורדת חום." },
-  { brand: "אופטלגין (Optalgin)", generic: "Dipyrone", category: "כאבים וחום", info: "משכך כאבים חזק ומוריד חום. זהירות רגישות." },
-  { brand: "אדוויל, נורופן, איבופן", generic: "Ibuprofen", category: "נוגדי דלקת (NSAIDs)", info: "שיכוך כאב ודלקת. עלול לגרום לגירוי בקיבה." },
-  { brand: "ארקוקסיה, סלקוקס", generic: "Cox-2 Inhibitors", category: "נוגדי דלקת", info: "לכאבים אורתופדיים חזקים ודלקות פרקים." },
-  { brand: "טרגין (Targin), פרקוסט (Percocet)", generic: "Oxycodone", category: "אופיואידים", info: "משכך כאב נרקוטי חזק. דיכוי נשימה במינון יתר." },
-  { brand: "מורפין, פנטניל", generic: "Opioids", category: "אופיואידים", info: "שיכוך כאב עוצמתי (פציעות קשות)." },
-  { brand: "מיקרופירין, קרטיה, אספירין", generic: "Aspirin", category: "נוגדי טסיות", info: "מדלל דם קל, מניעת אירועי לב (MI) ושבץ." },
-  { brand: "אליקוויס, קסרלטו, פרדקסה", generic: "NOACs", category: "נוגדי קרישה", info: "מדלל דם חזק. סכנת דימום משמעותית!" },
-  { brand: "קומדין (Coumadin)", generic: "Warfarin", category: "נוגדי קרישה", info: "מדלל דם ותיק. דורש מעקב INR קבוע." },
-  { brand: "נורמיטן, קונקור, דרלין", generic: "Beta Blockers", category: "חוסמי בטא", info: "מוריד דופק ולחץ דם. חשוב: מסך טכיקרדיה בהלם!" },
-  { brand: "רמיפריל, טריטייס, אנלפריל", generic: "ACE/ARB", category: "לחץ דם", info: "טיפול ביתר לחץ דם ואי ספיקת לב." },
-  { brand: "איזוקט (Isoket), קורדיל", generic: "Nitrates", category: "ניטרטים", info: "מרחיב כלי דם. זהירות: נפילת לחץ דם קיצונית." },
-  { brand: "מטפורמין, גלוקומין", generic: "Metformin", category: "סוכרת", info: "הורדת תנגודת לאינסולין." },
-  { brand: "לנטוס, נובולוג", generic: "Insulin", category: "סוכרת", info: "הורמון בזריקה. סכנה להיפוגליקמיה." },
-  { brand: "ונטולין (Ventolin), בריקלין", generic: "Salbutamol", category: "נשימה", info: "פותח דרכי אוויר (משאף/אינהלציה). גורם לדופק מהיר." },
-  { brand: "ציפרלקס, לוסטרל, פרוזק", generic: "SSRI", category: "נוגדי דיכאון/חרדה", info: "טיפול כרוני בדיכאון וחרדה." },
-  { brand: "וליום, אסיבל, קלונקס, דורמיקום", generic: "Benzodiazepines", category: "הרגעה ושינה", info: "הרגעה, מניעת פרכוסים, הרדמה." }
+  // כאבים וחום
+  { brand: "אקמול, דקסמול, פאראמול, פנדול", generic: "Paracetamol", category: "כאבים וחום", info: "שיכוך כאבים קלים עד בינוניים והורדת חום. מינון מקסימלי: 4g/יום. סכנה להרעלת כבד בנטילת יתר." },
+  { brand: "אופטלגין (Optalgin)", generic: "Dipyrone / Metamizole", category: "כאבים וחום", info: "משכך כאבים חזק ומוריד חום. זהירות: רגישות ואגרנולוציטוזיס." },
+  { brand: "אדוויל, נורופן, איבופן, דולורס", generic: "Ibuprofen", category: "נוגדי דלקת (NSAIDs)", info: "שיכוך כאב ודלקת. עלול לגרום לגירוי בקיבה, פגיעה כלייתית ועלייה ב-BP." },
+  { brand: "וולטרן, דיקלו, דיקלורן", generic: "Diclofenac", category: "נוגדי דלקת (NSAIDs)", info: "NSAID חזק לכאבים מפרקיים ואורתופדיים. גירוי קיבה ופגיעה כלייתית." },
+  { brand: "ארקוקסיה, סלקוקס", generic: "Cox-2 Inhibitors (Etoricoxib / Celecoxib)", category: "נוגדי דלקת", info: "לכאבים אורתופדיים חזקים ודלקות פרקים. סיכון קרדיווסקולרי." },
+  { brand: "טרמדול, טרמבסיה", generic: "Tramadol", category: "אופיואידים חלשים", info: "משכך כאב חצי-נרקוטי. סכנה לפרכוסים בסף נמוך ואינטראקציות עם SSRI." },
+  { brand: "טרגין (Targin), פרקוסט (Percocet), אוקסינורם", generic: "Oxycodone", category: "אופיואידים", info: "משכך כאב נרקוטי חזק. דיכוי נשימה במינון יתר. Naloxone כנגד-תרופה." },
+  { brand: "מורפין, MST, אבינזה", generic: "Morphine", category: "אופיואידים", info: "אופיואיד חזק לכאב עוצמתי. דיכוי נשימה, ברדיקרדיה, היפוטנסיה." },
+  { brand: "פנטניל, מטדון", generic: "Fentanyl / Methadone", category: "אופיואידים", info: "אופיואידים עוצמתיים. פנטניל: תחילת פעולה מהירה. מטדון: חצי-חיים ארוך — סכנת מינון יתר מאוחר." },
+  // נוגדי טסיות ודם
+  { brand: "מיקרופירין, קרטיה, אספירין 100/300", generic: "Aspirin (Acetylsalicylic Acid)", category: "נוגדי טסיות", info: "מדלל דם קל, מניעת MI ושבץ. 300mg ללעיסה ב-ACS חריף. מוריד חום (להימנע בילדים)." },
+  { brand: "פלביקס", generic: "Clopidogrel", category: "נוגדי טסיות", info: "חוסם ADP לטסיות. לאחר אוטם לב ו-stent. לוקח עד שעה להשפיע." },
+  { brand: "ברילינטה", generic: "Ticagrelor", category: "נוגדי טסיות", info: "אנטגוניסט ADP חזק. דיספנאה כתופעת לוואי שכיחה. לא לגרוש בניתוח." },
+  { brand: "אליקוויס", generic: "Apixaban", category: "נוגדי קרישה (NOAC)", info: "NOAC — חוסם FXa. מינון מקובל 5mg פעמיים ביום. סכנת דימום!" },
+  { brand: "קסרלטו", generic: "Rivaroxaban", category: "נוגדי קרישה (NOAC)", info: "NOAC — חוסם FXa. פעם ביום. אין להפסיק פתאום! סכנת דימום." },
+  { brand: "פרדקסה", generic: "Dabigatran", category: "נוגדי קרישה (NOAC)", info: "NOAC — חוסם תרומבין. נגד-תרופה: Idarucizumab (פרקסביינד). סכנת דימום!" },
+  { brand: "קומדין (Coumadin), וורפרין", generic: "Warfarin", category: "נוגדי קרישה", info: "מדלל דם ותיק. דורש מעקב INR קבוע (טווח 2-3 לרוב). נגד-תרופה: ויטמין K + FFP." },
+  // לחץ דם וקרדיולוגיה
+  { brand: "נורמיטן, קונקור, דרלין, ביסופרולול", generic: "Beta Blockers (Metoprolol / Bisoprolol)", category: "חוסמי בטא", info: "מוריד דופק ולחץ דם. חשוב: מסך טכיקרדיה בהלם! אסור להפסיק פתאום." },
+  { brand: "אינדרל", generic: "Propranolol", category: "חוסמי בטא לא-סלקטיביים", info: "חוסם בטא לא-סלקטיבי. מסוכן באסתמה וב-COPD. מסך היפוגליקמיה." },
+  { brand: "רמיפריל, טריטייס, אנלפריל, קובנטיל", generic: "ACE Inhibitors (Ramipril / Enalapril)", category: "מעכבי ACE", info: "טיפול ביתר לחץ דם ואי ספיקת לב. תופעת לוואי: שיעול יבש. היפרקלמיה." },
+  { brand: "לוזרטן, ולסרטן, אירבסרטן", generic: "ARB (Angiotensin Receptor Blockers)", category: "מעכבי ARB", info: "כמו ACE inhibitors ללא שיעול. בשילוב עם ACE — סכנת כשל כלייתי." },
+  { brand: "נורווסק, אמלור", generic: "Amlodipine", category: "חוסמי סידן", info: "CCB לטיפול בלחץ דם גבוה. בצקות ברגליים כתופעת לוואי שכיחה." },
+  { brand: "אדלת, ניפדיפין", generic: "Nifedipine", category: "חוסמי סידן", info: "CCB לכלי דם. ירידה מהירה בלחץ דם. גלגולית SL מסוכנת." },
+  { brand: "איזוסופטין, וראפאמיל", generic: "Verapamil", category: "חוסמי סידן", info: "CCB לדופק וקצב לב. אסור בשילוב עם חוסמי בטא! ברדיקרדיה/בלוק AV." },
+  { brand: "קורדרון", generic: "Amiodarone", category: "נגד הפרעות קצב", info: "אנטי-אריתמי עוצמתי ל-AF, VT, VF. פגיעת בלוטת תריס, ריאות, כבד בשימוש ממושך." },
+  { brand: "לנוקסין, דיגוקסין", generic: "Digoxin", category: "גליקוזידים קרדיאליים", info: "מאט דופק ב-AF ומחזק התכווצות הלב. טווח טיפולי צר — רעילות: בחילה, הפרעות קצב." },
+  { brand: "איזוקט (Isoket), קורדיל, ניטרוגליצרין", generic: "Nitrates", category: "ניטרטים", info: "מרחיב כלי דם. זהירות: נפילת לחץ דם קיצונית. אסור עם ויאגרה (PDE5 inhibitors)!" },
+  // משתנים
+  { brand: "לסיקס, פורוסמיד", generic: "Furosemide", category: "משתנים (לולאה)", info: "משתן עוצמתי לבצקת ריאות ואי ספיקת לב. היפוקלמיה, היפוטנסיה, ריאות." },
+  { brand: "היגרוטון, HCT, הידרוכלורותיאזיד", generic: "Hydrochlorothiazide", category: "משתנים (תיאזיד)", info: "משתן לחץ דם. היפוקלמיה, היפרגליקמיה." },
+  { brand: "אלדקטון, ספירונולקטון", generic: "Spironolactone", category: "משתנים (חוסמי אלדוסטרון)", info: "משתן שחוסך אשלגן. היפרקלמיה — זהירות בשילוב עם ACE/ARB." },
+  // סוכרת
+  { brand: "מטפורמין, גלוקומין, גלוקופאג", generic: "Metformin", category: "סוכרת (ביגואנידים)", info: "מורידה תנגודת לאינסולין. אסור בכשל כלייתי ולפני הרדמה עם חומר ניגוד." },
+  { brand: "ג'ארדיאנס", generic: "Empagliflozin (SGLT2i)", category: "סוכרת (SGLT2)", info: "מוריד סוכר, משקל ולחץ דם. DKA (גם ב-normal glucose). UTI שכיח." },
+  { brand: "ג'נוביה, ג'נוביה-מט", generic: "Sitagliptin (DPP-4i)", category: "סוכרת (DPP-4)", info: "מוריד סוכר מתון. בטוח יחסית. דלקת לבלב נדירה." },
+  { brand: "אוזמפיק, ויקטוזה, ריבלסוס", generic: "GLP-1 Agonists (Semaglutide / Liraglutide)", category: "סוכרת / השמנה", info: "מוריד סוכר ומשקל. בחילות שכיחות. פנקריאטיטיס נדיר. ריפאמין עלייה בדופק." },
+  { brand: "לנטוס, טוג'יאו, בסגלאר", generic: "Insulin Glargine (Long-acting)", category: "סוכרת — אינסולין", info: "אינסולין ארוך-טווח פעם ביום. סכנה להיפוגליקמיה." },
+  { brand: "נובורפיד, נובולוג, אפידרה, הומלוג", generic: "Insulin Analogs (Rapid-acting)", category: "סוכרת — אינסולין", info: "אינסולין מהיר לפני ארוחות. תחילת פעולה כ-15 דק'. היפוגליקמיה!" },
+  // נשימה
+  { brand: "ונטולין, סלבוטמול, בריקלין", generic: "Salbutamol (SABA)", category: "נשימה — ברונכודילטטורים", info: "פותח דרכי אוויר מהיר (2-4 משאפות). גורם לטכיקרדיה ורעד. אסתמה וCOPD." },
+  { brand: "אירוטרופ, אטרוונט", generic: "Ipratropium (SAMA)", category: "נשימה — ברונכודילטטורים", info: "ברונכודילטטור אנטיכולינרגי. משלים סלבוטמול ב-COPD. יובש בפה." },
+  { brand: "ספיריבה, ברי-אלת", generic: "Tiotropium (LAMA)", category: "נשימה — COPD", info: "ברונכודילטטור ארוך-טווח לCOPD. פעם ביום. לא לאסתמה חריפה." },
+  { brand: "פוסטר, סימביקורט, סרטייד", generic: "ICS/LABA Combinations", category: "נשימה — אסתמה/COPD", info: "קורטיקוסטרואיד נשאף + ברונכודילטטור ארוך. לטיפול ממושך ומניעתי." },
+  // אנטיביוטיקה
+  { brand: "אמוקסיצילין, מוקסיפן, פלמוקסין", generic: "Amoxicillin", category: "אנטיביוטיקה (פניצילין)", info: "אנטיביוטיקה רחבה טווח לדרכי נשימה, אוזן ושתן. אלרגיה לפניצילין — שים לב!" },
+  { brand: "אוגמנטין", generic: "Amoxicillin-Clavulanate", category: "אנטיביוטיקה (פניצילין+BLI)", info: "פרופיל רחב יותר. גירוי קיבה שכיח. אלרגיה לפניצילין — שים לב!" },
+  { brand: "ציפרוצין, ציפרו", generic: "Ciprofloxacin", category: "אנטיביוטיקה (קינולונים)", info: "דרכי שתן, זיהומי עור ומעיים. פגיעה בגידים (אכיליס). אינטראקציה עם אנטיצידים." },
+  { brand: "זיתרומקס, אזיתרומיצין", generic: "Azithromycin", category: "אנטיביוטיקה (מקרולידים)", info: "נשימה, ע\"ג. שלב קצר (3-5 ימים). הארכת QT — זהירות בהפרעות קצב." },
+  // בלוטת תריס
+  { brand: "אלטרוקסין, לבוטרוקסין", generic: "Levothyroxine (T4)", category: "הורמוני תריס", info: "טיפול בתת-פעילות תריס. רגיש מאוד — מינון יתר: טכיקרדיה, חרדה, AF." },
+  // ניורולוגיה ונפשיאטריה
+  { brand: "ציפרלקס, לוסטרל, פרוזק, פלוקסטין", generic: "SSRI (Escitalopram / Sertraline / Fluoxetine)", category: "נוגדי דיכאון/חרדה", info: "טיפול כרוני בדיכאון וחרדה. תסמונת סרוטונין בשילוב עם טרמדול/MAOIs. לוקח 2-4 שבועות לפעולה." },
+  { brand: "ג'יין, סימבלטה", generic: "SNRI (Venlafaxine / Duloxetine)", category: "נוגדי דיכאון/חרדה", info: "עולה ב-BP. דיכאון, חרדה וכאב נוירופתי." },
+  { brand: "וליום, אסיבל, קלונקס", generic: "Benzodiazepines (Diazepam / Clonazepam)", category: "הרגעה ושינה", info: "הרגעה, מניעת פרכוסים, הרדמה. תלות! דיכוי נשימה במינון יתר." },
+  { brand: "דורמיקום, מידזולם", generic: "Midazolam", category: "הרגעה/הרדמה", info: "בנזודיאזפין קצר-טווח להרדמה ופרכוסים. דיכוי נשימה — מוניטורינג חובה." },
+  { brand: "נוירונטין", generic: "Gabapentin", category: "נוגד פרכוסים / כאב נוירופתי", info: "כאב נוירופתי, אפילפסיה. סחרחורת ונמנום. גמילה עלולה לגרום לפרכוסים." },
+  { brand: "ליריקה", generic: "Pregabalin", category: "נוגד פרכוסים / כאב נוירופתי", info: "כמו גאבפנטין אך עם השפעה מהירה יותר. פוטנציאל לתלות." },
+  { brand: "סרוקוול", generic: "Quetiapine", category: "פסיכיאטריה", info: "סכיזופרניה, דיכאון, BI-Polar. נמנום, עלייה במשקל, עלייה ב-QTc. תת-לחץ דם אורתוסטטי." },
+  { brand: "זיפרקסה", generic: "Olanzapine", category: "פסיכיאטריה", info: "אנטי-פסיכוטי. עלייה מהירה במשקל, תנגודת לאינסולין. תת-לחץ אורתוסטטי." },
+  { brand: "ריספרדל, ריספרידון", generic: "Risperidone", category: "פסיכיאטריה", info: "אנטי-פסיכוטי. תסמינים אקסטרה-פירמידליים. תת-לחץ אורתוסטטי." },
+  // מערכת עיכול
+  { brand: "אומפרדקס, לוסק, אומז", generic: "Omeprazole (PPI)", category: "מעכבי משאבת פרוטון", info: "מפחית חומציות קיבה. לנטילת NSAID לאורך זמן. מחסור B12/Mg+ בשימוש כרוני." },
+  { brand: "קונטרולוק, פנטופרזול", generic: "Pantoprazole (PPI)", category: "מעכבי משאבת פרוטון", info: "כמו אומפרזול. IV זמין לדימום פעיל עליון." },
+  { brand: "זנטק, רניטידין", generic: "Ranitidine / Famotidine (H2 blocker)", category: "חוסמי H2", info: "מפחיתי חומציות חלשים מPPI. זמינים ללא מרשם." },
+  // כולסטרול וסטטינים
+  { brand: "לבסטטין, ליפיטור", generic: "Atorvastatin", category: "סטטינים", info: "מוריד כולסטרול LDL. כאבי שרירים (מיופתיה) — CK גבוה. אינטראקציה עם מיץ אשכולית." },
+  { brand: "קרסטור", generic: "Rosuvastatin", category: "סטטינים", info: "סטטין חזק. נדיר: Rhabdomyolysis. בדיקות כבד." },
+  { brand: "זוקור, סימבסטטין", generic: "Simvastatin", category: "סטטינים", info: "סטטין ותיק. אינטראקציות תרופתיות רבות — שים לב!" },
+  // שלד ועצמות
+  { brand: "פוסלן, פוסמקס, אלנדרונט", generic: "Alendronate (Bisphosphonate)", category: "לעצמות (אוסטיאופורוזיס)", info: "מניעת שברים. חובה לשתות מים ולשבת ישר 30 דק' לאחר נטילה. אזופגיטיס." },
+  { brand: "קולכיצין", generic: "Colchicine", category: "שיגדון (Gout)", info: "לכאב חריף שיגדון. מינון יתר קטלני. שלשול שכיח." },
+  { brand: "אלופורינול, ציגנים", generic: "Allopurinol", category: "שיגדון (מניעה)", info: "הורדת חומצת שתן לטווח ארוך. לא לנטילה בהתקף חריף." },
+  // אחר / מגוון
+  { brand: "אומניק (OCAS), האריטמס", generic: "Tamsulosin (Alpha blocker)", category: "ערמונית / שתן", info: "הרפיית ערמונית להפרעות השתנה ב-BPH. תת-לחץ אורתוסטטי — סכנת נפילה!" },
+  { brand: "אריספט, מנטלגו", generic: "Donepezil / Rivastigmine", category: "דמנציה / אלצהיימר", info: "מעכבי כולינסטראז לדמנציה. מאט התדרדרות. ברדיקרדיה, בחילה." },
+  { brand: "סינמט, מדופר, פרקינסיס", generic: "Levodopa/Carbidopa", category: "פרקינסון", info: "דיסקינזיה, תת-לחץ אורתוסטטי, פסיכוזה. הפסקה פתאומית — NMS מסוכן!" },
+  { brand: "דקסמתזון, פרדניזון, מדרול", generic: "Corticosteroids (Systemic)", category: "סטרואידים סיסטמיים", info: "אי ספיקת אדרנל, דלקות, אסתמה. עלייה ב-BP ו-Glucose. לא להפסיק פתאום!" },
 ];
 
-// --- מסד נתונים של מחלות רקע (מלא) ---
+// --- מסד נתונים של מחלות רקע (מורחב) ---
 const DISEASE_DATABASE = [
-  { medical: "Diabetes Mellitus (DM)", hebrew: "סוכרת", info: "הפרעה במטבוליזם של סוכר. סכנה להיפוגליקמיה או היפרגליקמיה. חובה לבדוק סוכר בכל שינוי במצב הכרה." },
-  { medical: "Hypertension (HTN)", hebrew: "יתר לחץ דם", info: "לחץ דם גבוה כרוני. מהווה גורם סיכון עיקרי לאירועי לב, שבץ מוחי (CVA) ופגיעה כלייתית." },
-  { medical: "Ischemic Heart Disease (IHD)", hebrew: "מחלת לב איסכמית", info: "היצרות בעורקים הכליליים של הלב. סיכון גבוה לתעוקת חזה (אנגינה) או אוטם בשריר הלב (MI)." },
-  { medical: "Congestive Heart Failure (CHF)", hebrew: "אי ספיקת לב", info: "הלב מתקשה לשאוב או להזרים דם כראוי. סכנה לבצקת ריאות (קוצר נשימה בשכיבה, חרחורים)." },
-  { medical: "Chronic Obstructive Pulmonary Disease (COPD)", hebrew: "מחלת ריאות חסימתית כרונית", info: "לרוב עקב עישון. מתבטא בקוצר נשימה כרוני, ייתכן שהסטורציה הבסיסית נמוכה (88%-92%)." },
-  { medical: "Asthma", hebrew: "אסתמה / קצרת נשימה", info: "מחלה דלקתית של דרכי הנשימה. מתבטאת בהתקפי קוצר נשימה, צפצופים ושימוש בשרירי עזר." },
-  { medical: "Cerebrovascular Accident (CVA) / TIA", hebrew: "שבץ מוחי / אירוע חולף", info: "פגיעה באספקת דם למוח (חסימתי או דימומי). סכנה לפגיעה נוירולוגית. מטופלים לרוב נוטלים מדללי דם." },
-  { medical: "Chronic Kidney Disease (CKD)", hebrew: "אי ספיקת כליות כרונית", info: "פגיעה בתפקוד הכליות. ייתכן טיפול בדיאליזה. סכנה להפרעות קצב (עקב עודף אשלגן)." },
-  { medical: "Atrial Fibrillation (A-Fib)", hebrew: "פרפור עליות", info: "הפרעת הקצב השכיחה ביותר. הלב פועם בקצב לא סדיר. המטופלים לוקחים מדללי דם חזקים - סכנת דימום!" },
-  { medical: "Epilepsy / Seizures", hebrew: "אפילפסיה / כפיון", info: "הפרעה נוירולוגית המתבטאת בנטייה לפרכוסים. יש לברר אם נוטלים תרופות באופן סדיר." },
-  { medical: "Dyslipidemia / Hyperlipidemia", hebrew: "יתר שומנים בדם (כולסטרול)", info: "רמות גבוהות של שומנים וכולסטרול בדם. גורם סיכון לטרשת עורקים ומחלות לב." }
+  // לב וכלי דם
+  { medical: "Ischemic Heart Disease (IHD / CAD)", hebrew: "מחלת לב כלילית / איסכמית", info: "היצרות בעורקים הכליליים. סיכון גבוה לתעוקת חזה (אנגינה) או אוטם בשריר הלב (MI). נוטלים לרוב אספירין, סטטין, חוסם בטא." },
+  { medical: "Congestive Heart Failure (CHF)", hebrew: "אי ספיקת לב", info: "הלב מתקשה לשאוב דם כראוי. סכנה לבצקת ריאות (קוצר נשימה בשכיבה, חרחורים, SpO₂ ירוד). נוטלים לרוב: לסיקס, ACE/ARB, חוסם בטא." },
+  { medical: "Hypertension (HTN)", hebrew: "יתר לחץ דם", info: "לחץ דם גבוה כרוני. גורם סיכון עיקרי ל-MI, CVA ופגיעה כלייתית. משבר יתר לחץ דם (>180/120): נזק איברי מטרה — פינוי דחוף." },
+  { medical: "Atrial Fibrillation (A-Fib / AF)", hebrew: "פרפור עליות", info: "הפרעת קצב שכיחה. דופק לא סדיר, ייתכן מהיר. נוטלים מדללי דם (NOAC/וורפרין) — סכנת דימום! AF חדש עם המודינמי לא יציב: cardioversion." },
+  { medical: "Ventricular Tachycardia / Fibrillation (VT/VF)", hebrew: "טכיקרדיה חדרית / פרפור חדרים", info: "הפרעות קצב מסכנות חיים. VF = דום לב — יש להחייא מיד. VT עם דופק: הכן דפיברילטור. לרוב ממקור קרדיאלי." },
+  { medical: "Aortic Stenosis / Aortic Aneurysm", hebrew: "היצרות מסתם אאורטלי / מפרצת אאורטה", info: "היצרות אאורטה: סינקופה, אנגינה, קוצר נשימה — סיכון גבוה. מפרצת אאורטה (AAA): קרע = הלם מסכן חיים — פינוי נט\"ן!" },
+  { medical: "Peripheral Artery Disease (PAD)", hebrew: "מחלת עורקים היקפית", info: "היצרות כלי דם לגפיים. כאב בשריר בהליכה (claudication). ABPI נמוך. פינוי דחוף בכאב חמור אקוטי (חסימה חריפה)." },
+  // נשימה
+  { medical: "Chronic Obstructive Pulmonary Disease (COPD)", hebrew: "מחלת ריאות חסימתית כרונית", info: "לרוב מעשנים. קוצר נשימה כרוני. SpO₂ בסיסי נמוך (88-92%) — יעד חמצון מתון! החמרה חריפה: ברונכודילטטורים, סטרואידים, חמצן מבוקר." },
+  { medical: "Asthma", hebrew: "אסתמה / קצרת", info: "דלקת דרכי נשימה. התקפים בחשיפה לגורמים. צפצופים, קוצר נשימה, שימוש שרירי עזר. ונטולין (Salbutamol) + סטרואידים בהתקף." },
+  { medical: "Pulmonary Embolism (PE)", hebrew: "תסחיף ריאתי", info: "חסימת עורק ריאה. קוצר נשימה פתאומי, טכיקרדיה, כאב חזה, SpO₂ ירוד. סכנה להלם ודום לב. אנטיקואגולציה מיידית + פינוי נט\"ן." },
+  { medical: "Pneumothorax (Tension)", hebrew: "פנאומותורקס מתח", info: "אוויר לחץ בחלל פלאורה. ירידה בנשימה צד אחד, הסטת טרכיאה, עלייה בלחץ ורידי, הלם — נקב מחט דחוף (עצם 2 ICS, MCL)!" },
+  // סוכרת ואנדוקרינולוגיה
+  { medical: "Diabetes Mellitus Type 1 / Type 2 (DM)", hebrew: "סוכרת סוג 1 / סוג 2", info: "הפרעת סוכר. היפוגליקמיה (<70): בלבול, הזעה, פרכוס — גלוקוז IV/פומי דחוף. היפרגליקמיה (DKA/HHS): נשימה קוסמאול, התייבשות, בחינת הכרה." },
+  { medical: "Hypothyroidism / Hyperthyroidism", hebrew: "תת-פעילות / יתר-פעילות בלוטת תריס", info: "תת-פעילות: עייפות, ברדיקרדיה, היפותרמיה — Myxedema coma נדיר. יתר-פעילות: טכיקרדיה, AF, סערת תריס (thyroid storm) — מסכנת חיים!" },
+  { medical: "Adrenal Insufficiency / Addison's", hebrew: "אי-ספיקת אדרנל", info: "חסר קורטיזול. משבר אדרנל: היפוטנסיה, היפונתרמיה, היפוגליקמיה — הידרוקורטיזון IV + נוזלים דחוף!" },
+  // כליות ושתן
+  { medical: "Chronic Kidney Disease (CKD) / ESRD", hebrew: "אי ספיקת כליות כרונית / דיאליזה", info: "פגיעה בתפקוד כלייתי. היפרקלמיה (>6.5) — סכנת הפרעות קצב! עמוס בנוזלים, אנמיה, יל\"ד. בדיאליזה: תשאול לגבי עיתוי טיפול אחרון." },
+  { medical: "Acute Kidney Injury (AKI)", hebrew: "אי ספיקת כליות חריפה", info: "עלייה חדה בקריאטינין. סיבות: prerenal (התייבשות), renal (נפריטיס), postrenal (חסימה). נוזלים IV בזהירות. הימנע מ-NSAIDs וחומר ניגוד." },
+  // נוירולוגיה
+  { medical: "Cerebrovascular Accident (CVA) / TIA", hebrew: "שבץ מוחי / אירוע מוחי חולף", info: "פגיעה בדם למוח (חסימתי/דימומי). FAST+: פנים, יד, דיבור, ראייה, זמן. זמן = מוח! אל תיתן אספירין לפני CT! מדוד סוכר." },
+  { medical: "Epilepsy / Status Epilepticus", hebrew: "אפילפסיה / סטטוס אפילפטיקוס", info: "פרכוס >5 דק' = status epilepticus. מידזולם IM/IV. סיבות: הפסקת תרופה, היפוגליקמיה, אלקטרוליטים, פגיעת ראש. הגן על ראש, חמצן." },
+  { medical: "Parkinson's Disease", hebrew: "מחלת פרקינסון", info: "רעד, נוקשות, תנועה איטית. נוטלים L-DOPA (סינמט/מדופר). הפסקת תרופה — NMS מסכן חיים! נטיה גבוהה לנפילות ולבלע לקוי." },
+  { medical: "Dementia / Alzheimer's Disease", hebrew: "דמנציה / אלצהיימר", info: "ירידה קוגניטיבית מתקדמת. לרוב קשיי תקשורת. חשש לשימוש שגוי בתרופות. נוטים לנפילות, הגנה על דרכי אוויר." },
+  { medical: "Multiple Sclerosis (MS)", hebrew: "טרשת נפוצה", info: "מחלה דמיאלינית. חולשת גפיים, בעיות ראייה, קשיי קואורדינציה. סימן Lhermitte (שוק בכיפוף צוואר). נוטלים תרופות ממוקנות ביולוגיה." },
+  // פסיכיאטריה
+  { medical: "Major Depressive Disorder / Anxiety", hebrew: "דיכאון מז'ורי / הפרעת חרדה", info: "דיכאון: אובדנות — הערכת סיכון! חרדה: התקפי פאניקה — נשימה, הרגעה. תרופות: SSRI, SNRI, בנזודיאזפינים. תסמונת סרוטונין בשילוב." },
+  { medical: "Bipolar Disorder", hebrew: "הפרעה דו-קוטבית", info: "מניה ודיכאון לסירוגין. בטיפול: ליתיום, ולפרואט, אנטי-פסיכוטי. ליתיום: טווח צר — רעילות: רעד, בלבול, שלשול." },
+  { medical: "Schizophrenia / Psychosis", hebrew: "סכיזופרניה / פסיכוזה", info: "הפרעה פסיכוטית. נוטלים אנטי-פסיכוטי (ריספרדל, זיפרקסה, קלופיקסול). NMS: חום גבוה, נוקשות, שינוי הכרה — חירום!" },
+  // דם ואונקולוגיה
+  { medical: "Cancer / Oncology Patient", hebrew: "מחלה ממארת / מטופל אונקולוגי", info: "חשיפה לסיכוני PE, זיהומים (נויטרופניה), דימומים (טרומבוציטופניה). כאב סרטני חמור. כימותרפיה — תופעות לוואי כבדות. פינוי לאונקולוגיה." },
+  { medical: "Anemia (Significant)", hebrew: "אנמיה משמעותית", info: "Hb נמוך. עייפות, קוצר נשימה, טכיקרדיה, תת-לחץ. אנמיה חמורה (<7): שקול עירוי. חשוב לברר סיבה: דימום, המוליזה, מחסור." },
+  { medical: "DVT / Thrombophilia", hebrew: "פקקת ורידים עמוקה / נטיה לקרישה", info: "כאב ונפיחות ברגל. סכנה לתסחיף ריאתי (PE). נוטלים אנטיקואגולנטים — סכנת דימום. Homan's sign לא אמין." },
+  // עיכול ובטן
+  { medical: "Liver Cirrhosis / Chronic Liver Disease", hebrew: "שחמת כבד / מחלת כבד כרונית", info: "קרישה לקויה (PT מוארך) — סכנת דימום! ורידים דליתיים — דימום עליון מסכן חיים. אנצפלופתיה כבדית: בלבול + אמוניה גבוהה." },
+  { medical: "Inflammatory Bowel Disease (IBD — Crohn's / UC)", hebrew: "מחלת קרוהן / קוליטיס כיבית", info: "מחלות דלקתיות כרוניות של המעי. החמרות: כאבי בטן, שלשולים, דמם מרקטום, חום. נוטלים: סטרואידים, ביולוגיה, 5-ASA." },
+  // מפרקים ועצמות
+  { medical: "Rheumatoid Arthritis (RA)", hebrew: "דלקת מפרקים שגרונתית", info: "מחלה דלקתית אוטואימונית. נוטלים מדכאי חיסון — סיכון זיהומים גבוה! NSAIDs, סטרואידים, מתוטרקסט, ביולוגיה." },
+  { medical: "Systemic Lupus (SLE)", hebrew: "זאבת אדמנתית מערכתית", info: "מחלה אוטואימונית רב-מערכתית. פרפח פנים, פגיעת כליות, לב, מוח. מדכאי חיסון — נטייה לזיהומים." },
+  { medical: "Gout (Gouty Arthritis)", hebrew: "שיגדון", info: "שקיעת קריסטלי חומצת שתן במפרקים. כאב חריף, אדמומיות ונפיחות (אגודל כף הרגל לרוב). קולכיצין/NSAIDs לטיפול חריף." },
+  { medical: "Osteoporosis", hebrew: "אוסטיאופורוזיס", info: "ירידה בצפיפות עצם. נטייה גבוהה לשברים (ירך, חוליות, שורש כף יד). שברי עמוד שדרה: כאב גב — חשוב לאמר קיבוע!" },
+  // אחר
+  { medical: "Organ Transplant / Immunosuppressed", hebrew: "השתלת איבר / מדוכא חיסוני", info: "נוטלים מדכאי חיסון. סיכון גבוה לזיהומים אופורטוניסטיים (PCP, CMV). חשד לזיהום — פינוי דחוף. הימנע מ-NSAIDs." },
+  { medical: "HIV / AIDS", hebrew: "נגיף ה-HIV / איידס", info: "ספירת CD4 נמוכה — סיכון לזיהומים הזדמנותיים. נוטלים תרופות אנטירטרוויראליות. אינטראקציות תרופתיות רבות." },
+  { medical: "Obstructive Sleep Apnea (OSA)", hebrew: "דום נשימה בשינה", info: "הפסקות נשימה בשינה. לרוב עם CPAP. השמנה גורם סיכון מרכזי. הרדמה — שים לב לסיכון דרכי נשימה!" },
+  { medical: "Obesity / Metabolic Syndrome", hebrew: "השמנת יתר / תסמונת מטבולית", info: "BMI>30. גורם סיכון ל-DM2, HTN, IHD, OSA, מפרקים. גישה לוריד עשויה להיות קשה. שים לב לתרופות שבהן מינון תלוי משקל." },
+  { medical: "Alcohol / Substance Use Disorder", hebrew: "שימוש מזיק באלכוהול / סמים", info: "גמילה מאלכוהול: Delirium Tremens — פרכוסים, חרדה, אוטונומי — מסכן חיים! הרעלה: ABCDE + נוגדנים ספציפיים (נלוקסון לאופיואידים)." },
 ];
 
 // --- מסד מתורגמן רפואי לשטח ---
@@ -100,6 +203,11 @@ const TRANSLATIONS = [
 const TranslatorScreen = () => {
   const [selectedLang, setSelectedLang] = useState('en');
   const [activePhrase, setActivePhrase] = useState(null);
+  const [activePhraseIndex, setActivePhraseIndex] = useState<number | null>(null);
+  const [mode, setMode] = useState<'phrases' | 'free'>('phrases');
+  const [freeText, setFreeText] = useState('');
+  const [freeResult, setFreeResult] = useState('');
+  const [translating, setTranslating] = useState(false);
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -108,25 +216,79 @@ const TranslatorScreen = () => {
     { code: 'am', name: 'አማርኛ', flag: '🇪🇹' }
   ];
 
-  const playAudio = (phraseObj) => {
+  const langNames: Record<string, string> = { en: 'English', ru: 'Russian', ar: 'Arabic', am: 'Amharic' };
+
+  const playAudio = (phraseObj: any, idx?: number) => {
     setActivePhrase(phraseObj);
+    if (idx !== undefined) setActivePhraseIndex(idx);
     Speech.stop();
-    // לאייפון ולאנדרואיד לרוב אין מנוע אמהרית מובנה, אז אנחנו חוסמים את ההקראה באמהרית כדי שלא יקרוס
     if (selectedLang !== 'am') {
       Speech.speak(phraseObj[selectedLang], { language: selectedLang });
     }
   };
 
+  const closePhrase = () => {
+    setActivePhrase(null);
+    setActivePhraseIndex(null);
+    Speech.stop();
+  };
+
+  const goNext = () => {
+    if (activePhraseIndex === null) return;
+    const next = (activePhraseIndex + 1) % TRANSLATIONS.length;
+    playAudio(TRANSLATIONS[next], next);
+  };
+
+  const goPrev = () => {
+    if (activePhraseIndex === null) return;
+    const prev = (activePhraseIndex - 1 + TRANSLATIONS.length) % TRANSLATIONS.length;
+    playAudio(TRANSLATIONS[prev], prev);
+  };
+
+  const translateFree = async () => {
+    if (!freeText.trim()) return;
+    setTranslating(true);
+    setFreeResult('');
+    try {
+      const apiKey = process.env.EXPO_PUBLIC_GEMINI_KEY || '';
+      if (!apiKey) { setFreeResult('❌ מפתח API חסר'); setTranslating(false); return; }
+      const targetLang = langNames[selectedLang];
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `You are a medical translator. Translate the following Hebrew medical question/phrase to ${targetLang}. Return ONLY the translation, no explanation.\n\nHebrew: ${freeText}` }] }],
+          safetySettings: [
+            { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+            { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" }
+          ]
+        })
+      });
+      const data = await response.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (text) {
+        setFreeResult(text.trim());
+        if (selectedLang !== 'am') Speech.speak(text.trim(), { language: selectedLang });
+      } else {
+        setFreeResult('❌ שגיאה בתרגום. בדוק חיבור לאינטרנט.');
+      }
+    } catch (e: any) { setFreeResult(`❌ שגיאת רשת: ${e.message}`); }
+    setTranslating(false);
+  };
+
   return (
     <View style={styles.internalScreen}>
       <Text style={styles.internalTitle}>מתורגמן רפואי לשטח</Text>
-      
-      <View style={[styles.rowReverse, {marginBottom: 20}]}>
+
+      {/* בחירת שפה */}
+      <View style={[styles.rowReverse, {marginBottom: 12}]}>
         {languages.map(lang => (
-          <TouchableOpacity 
-            key={lang.code} 
-            style={[styles.miniOption, {width: '23%'}, selectedLang === lang.code && styles.selectedOption]} 
-            onPress={() => { setSelectedLang(lang.code); setActivePhrase(null); Speech.stop(); }}
+          <TouchableOpacity
+            key={lang.code}
+            style={[styles.miniOption, {width: '23%'}, selectedLang === lang.code && styles.selectedOption]}
+            onPress={() => { setSelectedLang(lang.code); setActivePhrase(null); setFreeResult(''); Speech.stop(); }}
           >
             <Text style={{textAlign: 'center', fontSize: 24}}>{lang.flag}</Text>
             <Text style={[styles.optionText, {textAlign: 'center', fontSize: 12, marginTop: 5}, selectedLang === lang.code && styles.selectedOptionText]}>{lang.name}</Text>
@@ -134,30 +296,80 @@ const TranslatorScreen = () => {
         ))}
       </View>
 
-      {activePhrase && (
-        <View style={styles.summaryCard}>
-          <Text style={{color: '#888', fontSize: 16, marginBottom: 10, textAlign: 'center'}}>{activePhrase.he}</Text>
-          <Text style={{color: '#FF8C00', fontSize: selectedLang === 'am' ? 32 : 26, fontWeight: 'bold', textAlign: 'center', lineHeight: 40}}>{activePhrase[selectedLang]}</Text>
-          
-          {selectedLang === 'am' ? (
-            <Text style={{color: '#ff4444', textAlign: 'center', marginTop: 15, fontWeight: 'bold'}}>* הקראה קולית באמהרית אינה נתמכת במכשירך. הצג את המסך למטופל.</Text>
-          ) : (
-            <TouchableOpacity style={[styles.scanBtn, {marginTop: 20, padding: 12, backgroundColor: '#333'}]} onPress={() => playAudio(activePhrase)}>
-              <Text style={[styles.scanBtnText, {color: '#fff'}]}>🔊 השמע שוב</Text>
-            </TouchableOpacity>
+      {/* בחירת מצב */}
+      <View style={[styles.rowReverse, {marginBottom: 16, gap: 8}]}>
+        <TouchableOpacity style={[styles.modeTab, mode === 'phrases' && styles.modeTabActive]} onPress={() => setMode('phrases')}>
+          <Text style={[styles.modeTabText, mode === 'phrases' && styles.modeTabTextActive]}>📋 משפטים מוכנים</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.modeTab, mode === 'free' && styles.modeTabActive]} onPress={() => setMode('free')}>
+          <Text style={[styles.modeTabText, mode === 'free' && styles.modeTabTextActive]}>✏️ תרגום חופשי</Text>
+        </TouchableOpacity>
+      </View>
+
+      {/* מצב משפטים מוכנים */}
+      {mode === 'phrases' && (
+        <>
+          {activePhrase && (
+            <View style={styles.summaryCard}>
+              {/* כפתור סגירה + ניווט */}
+              <View style={{flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10}}>
+                <TouchableOpacity onPress={goPrev} style={styles.navArrowBtn}><Text style={styles.navArrowText}>◀ הקודם</Text></TouchableOpacity>
+                <TouchableOpacity onPress={closePhrase} style={styles.closePhraseBtn}><Text style={styles.closePhraseBtnText}>✕ סגור</Text></TouchableOpacity>
+                <TouchableOpacity onPress={goNext} style={styles.navArrowBtn}><Text style={styles.navArrowText}>הבא ▶</Text></TouchableOpacity>
+              </View>
+              <Text style={{color: '#888', fontSize: 15, marginBottom: 8, textAlign: 'center'}}>{activePhrase.he}</Text>
+              <Text style={{color: '#FF8C00', fontSize: selectedLang === 'am' ? 28 : 24, fontWeight: 'bold', textAlign: 'center', lineHeight: 38}}>{activePhrase[selectedLang]}</Text>
+              {selectedLang === 'am' ? (
+                <Text style={{color: '#ff4444', textAlign: 'center', marginTop: 12, fontWeight: 'bold', fontSize: 13}}>* הקראה קולית באמהרית אינה נתמכת. הצג למטופל.</Text>
+              ) : (
+                <TouchableOpacity style={[styles.scanBtn, {marginTop: 16, padding: 10, backgroundColor: '#333'}]} onPress={() => playAudio(activePhrase)}>
+                  <Text style={[styles.scanBtnText, {color: '#fff'}]}>🔊 השמע שוב</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           )}
-        </View>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {TRANSLATIONS.map((item, index) => (
+              <TouchableOpacity key={index} style={[styles.phraseBtn, activePhraseIndex === index && {borderColor: '#FF8C00'}]} onPress={() => playAudio(item, index)}>
+                <Text style={styles.phraseBtnText}>{item.he}</Text>
+                <Text style={{fontSize: 20}}>🗣️</Text>
+              </TouchableOpacity>
+            ))}
+            <View style={{height: 100}}/>
+          </ScrollView>
+        </>
       )}
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {TRANSLATIONS.map((item, index) => (
-          <TouchableOpacity key={index} style={styles.phraseBtn} onPress={() => playAudio(item)}>
-            <Text style={styles.phraseBtnText}>{item.he}</Text>
-            <Text style={{fontSize: 20}}>🗣️</Text>
+      {/* מצב תרגום חופשי */}
+      {mode === 'free' && (
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Text style={{color: '#888', textAlign: 'right', fontSize: 13, marginBottom: 8}}>הקלד שאלה או משפט בעברית — המערכת תתרגם לשפה שבחרת</Text>
+          <TextInput
+            style={[styles.searchInput, {height: 90, textAlignVertical: 'top', textAlign: 'right', paddingTop: 10}]}
+            placeholder="לדוגמה: האם יש לך כאב בחזה?"
+            placeholderTextColor="#666"
+            value={freeText}
+            onChangeText={setFreeText}
+            multiline
+          />
+          <TouchableOpacity style={[styles.scanBtn, {marginTop: 12}, translating && {backgroundColor: '#555'}]} onPress={translateFree} disabled={translating}>
+            {translating ? <ActivityIndicator color="#000" size="small" /> : <Text style={styles.scanBtnIcon}>🌐</Text>}
+            <Text style={styles.scanBtnText}>{translating ? ' מתרגם...' : ` תרגם ל-${langNames[selectedLang]}`}</Text>
           </TouchableOpacity>
-        ))}
-        <View style={{height: 100}}/>
-      </ScrollView>
+          {freeResult !== '' && (
+            <View style={styles.summaryCard}>
+              <Text style={{color: '#888', fontSize: 13, marginBottom: 6, textAlign: 'center'}}>תרגום:</Text>
+              <Text style={{color: '#FF8C00', fontSize: 24, fontWeight: 'bold', textAlign: 'center', lineHeight: 36}}>{freeResult}</Text>
+              {selectedLang !== 'am' && (
+                <TouchableOpacity style={[styles.scanBtn, {marginTop: 14, padding: 10, backgroundColor: '#333'}]} onPress={() => Speech.speak(freeResult, { language: selectedLang })}>
+                  <Text style={[styles.scanBtnText, {color: '#fff'}]}>🔊 השמע שוב</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+          <View style={{height: 100}}/>
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -232,6 +444,11 @@ const HospitalsMapScreen = () => {
   if (loading) return (<View style={[styles.internalScreen, {justifyContent: 'center'}]}><ActivityIndicator size="large" color="#FF8C00" /><Text style={{color: '#fff', textAlign: 'center', marginTop: 10}}>מאתר מיקום ומחשב טווחי פינוי...</Text></View>);
   if (!location) return (<View style={styles.internalScreen}><Text style={styles.internalTitle}>מפת בתי חולים</Text><Text style={{color: '#ff4444', textAlign: 'center', fontSize: 18}}>אין גישה למיקום (GPS).</Text></View>);
 
+  const openWaze = (hospital) => {
+    const url = `https://waze.com/ul?ll=${hospital.lat},${hospital.lon}&navigate=yes&zoom=17`;
+    Linking.openURL(url);
+  };
+
   // גרסת ווב: MapView אינו נתמך — רשימת בתי חולים עם המלצת פינוי
   if (Platform.OS === 'web') {
     return (
@@ -242,16 +459,26 @@ const HospitalsMapScreen = () => {
             <Text style={styles.evacBannerTitle}>🚨 המלצת פינוי: הבית החולים הקרוב ביותר</Text>
             <Text style={styles.evacBannerName}>{closestHospital.name} ({closestHospital.city})</Text>
             <Text style={styles.evacBannerDistance}>מרחק אווירי: {closestHospital.distance.toFixed(1)} ק"מ</Text>
+            <TouchableOpacity style={styles.wazeBtn} onPress={() => openWaze(closestHospital)}>
+              <Text style={styles.wazeBtnText}>🔵 נווט ב-Waze</Text>
+            </TouchableOpacity>
           </View>
         )}
-        <Text style={{color: '#888', textAlign: 'center', fontSize: 13, marginVertical: 10}}>המפה זמינה באפליקציה בלבד. בית החולים הקרוב הוא: {closestHospital?.name}</Text>
         <ScrollView showsVerticalScrollIndicator={false}>
           {HOSPITALS_DATABASE.map((h, i) => {
             const isClosest = closestHospital && closestHospital.name === h.name;
             return (
-              <View key={i} style={[styles.diseaseCard, isClosest && {borderRightColor: '#FF8C00'}]}>
-                <Text style={[styles.diseaseMedical, isClosest && {color: '#FF8C00'}]}>{isClosest ? '⭐ ' : ''}{h.name}</Text>
-                <Text style={styles.diseaseHebrew}>{h.city}</Text>
+              <View key={i} style={[styles.diseaseCard, isClosest && {borderRightColor: '#FF8C00', borderRightWidth: 3}]}>
+                <View style={{flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+                  <View style={{flex: 1}}>
+                    <Text style={[styles.diseaseMedical, isClosest && {color: '#FF8C00'}]}>{isClosest ? '⭐ ' : ''}{h.name}</Text>
+                    <Text style={styles.diseaseHebrew}>{h.city}</Text>
+                    <Text style={{color: '#888', fontSize: 12, textAlign: 'right', marginTop: 3}}>{h.address}</Text>
+                  </View>
+                  <TouchableOpacity style={[styles.wazeBtn, {marginRight: 0, marginLeft: 8, paddingHorizontal: 10, paddingVertical: 6}]} onPress={() => openWaze(h)}>
+                    <Text style={[styles.wazeBtnText, {fontSize: 12}]}>🔵 Waze</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             );
           })}
@@ -268,6 +495,9 @@ const HospitalsMapScreen = () => {
           <Text style={styles.evacBannerTitle}>🚨 המלצת פינוי: הבית חולים הקרוב ביותר</Text>
           <Text style={styles.evacBannerName}>{closestHospital.name} ({closestHospital.city})</Text>
           <Text style={styles.evacBannerDistance}>מרחק אווירי: {closestHospital.distance.toFixed(1)} ק"מ</Text>
+          <TouchableOpacity style={styles.wazeBtn} onPress={() => openWaze(closestHospital)}>
+            <Text style={styles.wazeBtnText}>🔵 נווט ב-Waze</Text>
+          </TouchableOpacity>
         </View>
       )}
       <MapView style={{flex: 1}} showsUserLocation={true} showsMyLocationButton={true} initialRegion={{ latitude: location.latitude, longitude: location.longitude, latitudeDelta: 0.5, longitudeDelta: 0.5 }}>
@@ -872,5 +1102,15 @@ const styles = StyleSheet.create({
   phraseBtn: { backgroundColor: '#1C1C1E', padding: 20, borderRadius: 15, marginBottom: 15, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', borderWidth: 1, borderColor: '#444' },
   phraseBtnText: { color: '#fff', fontSize: 16, fontWeight: 'bold', flex: 1, textAlign: 'right', marginRight: 15 },
   whatsappBtn: { marginTop: 12, backgroundColor: '#25D366', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 12, alignItems: 'center' },
-  whatsappBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 15 }
+  whatsappBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 15 },
+  wazeBtn: { marginTop: 10, backgroundColor: '#33CCFF', paddingVertical: 8, paddingHorizontal: 16, borderRadius: 10, alignItems: 'center' },
+  wazeBtnText: { color: '#000', fontWeight: 'bold', fontSize: 14 },
+  modeTab: { flex: 1, paddingVertical: 10, borderRadius: 12, borderWidth: 1, borderColor: '#444', alignItems: 'center', backgroundColor: '#1C1C1E' },
+  modeTabActive: { backgroundColor: '#FF8C00', borderColor: '#FF8C00' },
+  modeTabText: { color: '#888', fontWeight: 'bold', fontSize: 13 },
+  modeTabTextActive: { color: '#000' },
+  navArrowBtn: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 10, backgroundColor: '#333' },
+  navArrowText: { color: '#FF8C00', fontWeight: 'bold', fontSize: 13 },
+  closePhraseBtn: { paddingVertical: 6, paddingHorizontal: 14, borderRadius: 10, backgroundColor: '#550000' },
+  closePhraseBtnText: { color: '#ff4444', fontWeight: 'bold', fontSize: 13 },
 });
