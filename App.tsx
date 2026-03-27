@@ -432,9 +432,9 @@ const ECGScreen = () => {
       if (!process.env.EXPO_PUBLIC_GEMINI_KEY) { Alert.alert('שגיאה', 'מפתח ה-API חסר ממשתני הסביבה של Vercel!'); }
       const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
       const cleanBase64 = photo.base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'x-goog-api-key': process.env.EXPO_PUBLIC_GEMINI_KEY || '' },
         body: JSON.stringify({
           contents: [{ parts: [
             { text: "You are a professional cardiologist. Analyze this ECG strip for rhythm, rate, and STEMI signs. Respond in professional Hebrew." },
