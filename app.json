@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "United Hatzalah",
+    "slug": "united-hatzalah",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/logo.jpg",
+    "splash": {
+      "image": "./assets/logo.jpg",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "web": {
+      "favicon": "./assets/logo.jpg",
+      "title": "United Hatzalah",
+      "description": "אפליקציית עזר לכונני איחוד הצלה עם סורק אקג AI, מחשבונים קליניים ומאגר תרופות."
+    },
+    "platforms": ["ios", "android", "web"]
+  }
+}
