@@ -432,7 +432,7 @@ const ECGScreen = () => {
       if (!process.env.EXPO_PUBLIC_GEMINI_KEY) { Alert.alert('שגיאה', 'מפתח ה-API חסר ממשתני הסביבה של Vercel!'); }
       const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
       const cleanBase64 = photo.base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -452,7 +452,7 @@ const ECGScreen = () => {
       if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
         setResult(data.candidates[0].content.parts[0].text);
       } else if (data.error) {
-        setResult(`❌ שגיאת שרת מגוגל:\n${data.error.message}`);
+        setResult('❌ שגיאת שרת מגוגל: ' + (data.error?.message || JSON.stringify(data.error)));
       } else {
         setResult(`⚠️ שגיאה לא צפויה:\n${JSON.stringify(data)}`);
       }
