@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, StatusBar, TextInput, Image, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, StatusBar, TextInput, Image, Platform, ActivityIndicator, Linking } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Audio } from 'expo-av';
 import * as Location from 'expo-location';
@@ -664,6 +664,7 @@ const VitalsScreen = () => (
 export default function App() {
   const [activeTab, setActiveTab] = useState('HOME');
   const [locationAddress, setLocationAddress] = useState("לחץ לאיתור מיקום GPS...");
+  const [locationCoords, setLocationCoords] = useState<{lat: number, lon: number} | null>(null);
   const [isLoadingLoc, setIsLoadingLoc] = useState(false);
 
   const fetchLocation = async () => {
@@ -672,12 +673,26 @@ export default function App() {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') { setLocationAddress("❌ הרשאה נדחתה"); setIsLoadingLoc(false); return; }
       let location = await Location.getCurrentPositionAsync({});
-      let geocode = await Location.reverseGeocodeAsync({ latitude: location.coords.latitude, longitude: location.coords.longitude });
+      const { latitude, longitude } = location.coords;
+      setLocationCoords({ lat: latitude, lon: longitude });
+      let geocode = await Location.reverseGeocodeAsync({ latitude, longitude });
       if (geocode && geocode.length > 0) {
-        const p = geocode[0]; setLocationAddress(`📍 ${p.street || ''} ${p.streetNumber || ''}, ${p.city || ''}`);
-      } else { setLocationAddress(`📍 ${location.coords.latitude.toFixed(4)}, ${location.coords.longitude.toFixed(4)}`); }
+        const p = geocode[0];
+        const street = [p.street, p.streetNumber].filter(Boolean).join(' ');
+        const city = p.city || p.subregion || '';
+        setLocationAddress(`📍 ${street}${street && city ? ', ' : ''}${city}`);
+      } else {
+        setLocationAddress(`📍 ${latitude.toFixed(5)}, ${longitude.toFixed(5)}`);
+      }
     } catch (e) { setLocationAddress("❌ שגיאה בקליטת GPS"); }
     setIsLoadingLoc(false);
+  };
+
+  const shareLocationWhatsApp = () => {
+    if (!locationCoords) return;
+    const mapsLink = `https://maps.google.com/?q=${locationCoords.lat},${locationCoords.lon}`;
+    const message = `🚨 מיקום לחילוץ:\n${locationAddress.replace('📍 ', '')}\n${mapsLink}`;
+    Linking.openURL(`https://wa.me/?text=${encodeURIComponent(message)}`);
   };
 
   const renderScreen = () => {
@@ -711,10 +726,17 @@ export default function App() {
         {activeTab === 'HOME' && (
           <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             
-            <TouchableOpacity style={styles.gpsWidget} onPress={fetchLocation}>
+            <View style={styles.gpsWidget}>
               <Text style={styles.gpsWidgetTitle}>המיקום שלך לחילוץ / הכוונה:</Text>
-              {isLoadingLoc ? <ActivityIndicator color="#FF8C00" /> : <Text style={styles.gpsWidgetText}>{locationAddress}</Text>}
-            </TouchableOpacity>
+              <TouchableOpacity onPress={fetchLocation}>
+                {isLoadingLoc ? <ActivityIndicator color="#FF8C00" /> : <Text style={styles.gpsWidgetText}>{locationAddress}</Text>}
+              </TouchableOpacity>
+              {locationCoords && (
+                <TouchableOpacity style={styles.whatsappBtn} onPress={shareLocationWhatsApp}>
+                  <Text style={styles.whatsappBtnText}>📲 שתף מיקום בוואטסאפ</Text>
+                </TouchableOpacity>
+              )}
+            </View>
 
             {/* החזרנו פנימה את הכל! 9 כפתורים, נגלל למטה במידת הצורך */}
             <View style={styles.gridContainer}>
@@ -835,5 +857,7 @@ const styles = StyleSheet.create({
   evacBannerName: { color: '#FF8C00', fontSize: 22, fontWeight: '900' },
   evacBannerDistance: { color: '#888', fontSize: 16, marginTop: 5 },
   phraseBtn: { backgroundColor: '#1C1C1E', padding: 20, borderRadius: 15, marginBottom: 15, flexDirection: 'row-reverse', justifyContent: 'space-between', alignItems: 'center', borderWidth: 1, borderColor: '#444' },
-  phraseBtnText: { color: '#fff', fontSize: 16, fontWeight: 'bold', flex: 1, textAlign: 'right', marginRight: 15 }
+  phraseBtnText: { color: '#fff', fontSize: 16, fontWeight: 'bold', flex: 1, textAlign: 'right', marginRight: 15 },
+  whatsappBtn: { marginTop: 12, backgroundColor: '#25D366', paddingVertical: 10, paddingHorizontal: 20, borderRadius: 12, alignItems: 'center' },
+  whatsappBtnText: { color: '#fff', fontWeight: 'bold', fontSize: 15 }
 });
