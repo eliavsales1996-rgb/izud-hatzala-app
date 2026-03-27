@@ -3,8 +3,17 @@ import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Sta
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Audio } from 'expo-av';
 import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
+import * as FileSystem from 'expo-file-system';
 import * as Speech from 'expo-speech';
+
+// --- ייבוא מותנה של react-native-maps (לא נתמך בווב/Vercel) ---
+let MapView: any = null;
+let Marker: any = null;
+if (Platform.OS !== 'web') {
+  const maps = require('react-native-maps');
+  MapView = maps.default;
+  Marker = maps.Marker;
+}
 
 // --- הגדרות מערכת ---
 const GEMINI_API_KEY = "AIzaSyCNCHhWFoNOnVRtsjU21UgUSn0AA7WTCJg";
@@ -93,6 +102,10 @@ const TRANSLATIONS = [
 const TranslatorScreen = () => {
   const [selectedLang, setSelectedLang] = useState('en');
   const [activePhrase, setActivePhrase] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingObj, setRecordingObj] = useState(null);
+  const [aiTranslation, setAiTranslation] = useState(null);
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -110,15 +123,59 @@ const TranslatorScreen = () => {
     }
   };
 
+  const startRecording = async () => {
+    try {
+      await Audio.requestPermissionsAsync();
+      await Audio.setAudioModeAsync({ allowsRecordingIOS: true, playsInSilentModeIOS: true });
+      const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
+      setRecordingObj(recording);
+      setIsRecording(true);
+      setAiTranslation(null);
+    } catch (e) { console.log('שגיאה בהקלטה:', e); }
+  };
+
+  const stopRecordingAndTranslate = async () => {
+    if (!recordingObj) return;
+    setIsRecording(false);
+    setIsTranslating(true);
+    try {
+      await recordingObj.stopAndUnloadAsync();
+      const uri = recordingObj.getURI();
+      setRecordingObj(null);
+      if (!uri) { setAiTranslation('❌ לא נמצא קובץ הקלטה'); setIsTranslating(false); return; }
+      const base64 = await FileSystem.readAsStringAsync(uri, { encoding: 'base64' as any });
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [
+            { text: "האזן לקטע הקול הבא ותרגם את הנאמר לעברית. ענה בעברית בלבד, ציין את התרגום בלבד ללא הסברים נוספים." },
+            { inline_data: { mime_type: "audio/m4a", data: base64 } }
+          ]}],
+          safetySettings: [{ category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }]
+        })
+      });
+      const data = await response.json();
+      if (data.candidates?.[0]?.content?.parts[0]?.text) {
+        setAiTranslation(data.candidates[0].content.parts[0].text);
+      } else if (data.error) {
+        setAiTranslation(`❌ שגיאת Gemini: ${data.error.message}`);
+      } else {
+        setAiTranslation('⚠️ לא התקבלה תשובה מה-AI');
+      }
+    } catch (e) { setAiTranslation(`❌ תקלה: ${e.message}`); }
+    setIsTranslating(false);
+  };
+
   return (
     <View style={styles.internalScreen}>
       <Text style={styles.internalTitle}>מתורגמן רפואי לשטח</Text>
-      
+
       <View style={[styles.rowReverse, {marginBottom: 20}]}>
         {languages.map(lang => (
-          <TouchableOpacity 
-            key={lang.code} 
-            style={[styles.miniOption, {width: '23%'}, selectedLang === lang.code && styles.selectedOption]} 
+          <TouchableOpacity
+            key={lang.code}
+            style={[styles.miniOption, {width: '23%'}, selectedLang === lang.code && styles.selectedOption]}
             onPress={() => { setSelectedLang(lang.code); setActivePhrase(null); Speech.stop(); }}
           >
             <Text style={{textAlign: 'center', fontSize: 24}}>{lang.flag}</Text>
@@ -127,11 +184,38 @@ const TranslatorScreen = () => {
         ))}
       </View>
 
+      {/* כפתור הקלטה לתרגום AI */}
+      <View style={[styles.rowReverse, {marginBottom: 15, alignItems: 'center'}]}>
+        <TouchableOpacity
+          style={[styles.scanBtn, {flex: 1, backgroundColor: isRecording ? '#ff4444' : '#1C1C1E', borderWidth: 2, borderColor: isRecording ? '#ff4444' : '#44aaff'}]}
+          onPress={isRecording ? stopRecordingAndTranslate : startRecording}
+          disabled={isTranslating}
+        >
+          {isTranslating
+            ? <ActivityIndicator color="#FF8C00" size="small" />
+            : <Text style={{fontSize: 22}}>{isRecording ? '⏹️' : '🎙️'}</Text>
+          }
+          <Text style={[styles.scanBtnText, {color: isRecording ? '#fff' : '#44aaff', marginRight: 8}]}>
+            {isTranslating ? ' מתרגם...' : isRecording ? ' עצור ותרגם' : ' הקלט לתרגום AI'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      {aiTranslation && (
+        <View style={[styles.summaryCard, {borderColor: '#44aaff', marginBottom: 15}]}>
+          <Text style={{color: '#44aaff', fontWeight: 'bold', fontSize: 14, marginBottom: 8, textAlign: 'center'}}>🤖 תרגום AI לעברית:</Text>
+          <Text style={{color: '#fff', fontSize: 20, fontWeight: 'bold', textAlign: 'center', lineHeight: 30}}>{aiTranslation}</Text>
+          <TouchableOpacity style={{marginTop: 10}} onPress={() => setAiTranslation(null)}>
+            <Text style={{color: '#888', textAlign: 'center', fontSize: 13}}>× נקה</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {activePhrase && (
         <View style={styles.summaryCard}>
           <Text style={{color: '#888', fontSize: 16, marginBottom: 10, textAlign: 'center'}}>{activePhrase.he}</Text>
           <Text style={{color: '#FF8C00', fontSize: selectedLang === 'am' ? 32 : 26, fontWeight: 'bold', textAlign: 'center', lineHeight: 40}}>{activePhrase[selectedLang]}</Text>
-          
+
           {selectedLang === 'am' ? (
             <Text style={{color: '#ff4444', textAlign: 'center', marginTop: 15, fontWeight: 'bold'}}>* הקראה קולית באמהרית אינה נתמכת במכשירך. הצג את המסך למטופל.</Text>
           ) : (
@@ -224,6 +308,35 @@ const HospitalsMapScreen = () => {
 
   if (loading) return (<View style={[styles.internalScreen, {justifyContent: 'center'}]}><ActivityIndicator size="large" color="#FF8C00" /><Text style={{color: '#fff', textAlign: 'center', marginTop: 10}}>מאתר מיקום ומחשב טווחי פינוי...</Text></View>);
   if (!location) return (<View style={styles.internalScreen}><Text style={styles.internalTitle}>מפת בתי חולים</Text><Text style={{color: '#ff4444', textAlign: 'center', fontSize: 18}}>אין גישה למיקום (GPS).</Text></View>);
+
+  // גרסת ווב: MapView אינו נתמך — מציגים רשימה עם המלצת פינוי
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.internalScreen}>
+        <Text style={styles.internalTitle}>מפת בתי חולים</Text>
+        {closestHospital && (
+          <View style={styles.evacBanner}>
+            <Text style={styles.evacBannerTitle}>🚨 המלצת פינוי: הבית חולים הקרוב ביותר</Text>
+            <Text style={styles.evacBannerName}>{closestHospital.name} ({closestHospital.city})</Text>
+            <Text style={styles.evacBannerDistance}>מרחק אווירי: {closestHospital.distance.toFixed(1)} ק"מ</Text>
+          </View>
+        )}
+        <Text style={{color: '#888', textAlign: 'center', fontSize: 14, marginVertical: 10}}>🗺️ מפה אינטראקטיבית אינה נתמכת בגרסת הווב. להלן רשימת בתי החולים:</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {HOSPITALS_DATABASE.map((h, i) => {
+            const isClosest = closestHospital && closestHospital.name === h.name;
+            return (
+              <View key={i} style={[styles.diseaseCard, isClosest && {borderRightColor: '#FF8C00', borderRightWidth: 5}]}>
+                <Text style={[styles.diseaseMedical, isClosest && {color: '#FF8C00'}]}>{isClosest ? '⭐ ' : ''}{h.name}</Text>
+                <Text style={styles.diseaseHebrew}>{h.city}</Text>
+              </View>
+            );
+          })}
+          <View style={{height: 100}}/>
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
     <View style={{flex: 1}}>
