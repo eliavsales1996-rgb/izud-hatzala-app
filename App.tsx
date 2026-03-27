@@ -718,10 +718,11 @@ export default function App() {
     <HelmetProvider>
       <Helmet>
         <title>United Hatzalah</title>
-        <link rel="icon" href="./assets/logo.jpg" />
-        <meta property="og:title" content="United Hatzalah" />
-        <meta property="og:description" content="אפליקציית חירום רפואי לפראמדיקים ומתנדבים" />
-        <meta property="og:image" content="./assets/logo.jpg" />
+        <link rel="icon" href="https://izud-hatzala-app.vercel.app/logo.png" />
+        <meta property="og:title" content="United Hatzalah - העוזר הדיגיטלי לכונן" />
+        <meta property="og:description" content="אפליקציית עזר לכונני איחוד הצלה עם סורק אקג AI, מחשבונים קליניים ומאגר תרופות." />
+        <meta property="og:image" content="https://izud-hatzala-app.vercel.app/logo.png" />
+        <meta property="og:url" content="https://izud-hatzala-app.vercel.app/" />
         <meta property="og:type" content="website" />
       </Helmet>
     <SafeAreaView style={styles.container}>
