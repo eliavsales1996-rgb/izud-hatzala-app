@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Helmet, HelmetProvider } from 'react-native-helmet-async';
 import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, StatusBar, TextInput, Image, Platform, ActivityIndicator, Linking } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Audio } from 'expo-av';
@@ -667,11 +668,6 @@ export default function App() {
   const [locationCoords, setLocationCoords] = useState<{lat: number, lon: number} | null>(null);
   const [isLoadingLoc, setIsLoadingLoc] = useState(false);
 
-  useEffect(() => {
-    if (Platform.OS === 'web' && typeof document !== 'undefined') {
-      document.title = "United Hatzalah";
-    }
-  }, []);
 
   const fetchLocation = async () => {
     setIsLoadingLoc(true);
@@ -719,6 +715,15 @@ export default function App() {
   };
 
   return (
+    <HelmetProvider>
+      <Helmet>
+        <title>United Hatzalah</title>
+        <link rel="icon" href="./assets/logo.jpg" />
+        <meta property="og:title" content="United Hatzalah" />
+        <meta property="og:description" content="אפליקציית חירום רפואי לפראמדיקים ומתנדבים" />
+        <meta property="og:image" content="./assets/logo.jpg" />
+        <meta property="og:type" content="website" />
+      </Helmet>
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000" />
       
@@ -774,6 +779,7 @@ export default function App() {
         <TouchableOpacity style={styles.navItem} onPress={() => setActiveTab('PROTOCOLS')}><Text style={[styles.navIcon, activeTab === 'PROTOCOLS' && styles.navIconActive]}>📋</Text></TouchableOpacity>
       </View>
     </SafeAreaView>
+    </HelmetProvider>
   );
 }
 
