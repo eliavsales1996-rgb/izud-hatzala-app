@@ -456,7 +456,11 @@ const ECGScreen = () => {
       if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
         setResult(data.candidates[0].content.parts[0].text);
       } else if (data.error) {
-        setResult(`❌ שגיאה (HTTP ${response.status}):\n${data.error?.message || JSON.stringify(data.error)}\n\nמפתח: ${apiKey.substring(0, 8)}...`);
+        const errMsg = data.error?.message || JSON.stringify(data.error);
+        const isExpired = errMsg.toLowerCase().includes('expired');
+        const isInvalid = errMsg.toLowerCase().includes('api key not valid') || errMsg.toLowerCase().includes('invalid');
+        const hint = isExpired ? '\n\n⚠️ המפתח פג תוקף — צור מפתח חדש ב-Google AI Studio ועדכן ב-Vercel.' : isInvalid ? '\n\n⚠️ המפתח לא תקין — בדוק את הגדרות Vercel.' : '';
+        setResult(`❌ שגיאה (HTTP ${response.status}):\n${errMsg}${hint}\n\nמפתח: ${apiKey.substring(0, 8)}...`);
       } else {
         setResult(`⚠️ תשובה לא צפויה (HTTP ${response.status}):\n${JSON.stringify(data)}`);
       }
