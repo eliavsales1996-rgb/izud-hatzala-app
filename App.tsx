@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, StatusBar, TextInput, Image, Platform, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, StatusBar, TextInput, Image, Platform, ActivityIndicator, Alert } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Audio } from 'expo-av';
 import * as Location from 'expo-location';
@@ -14,8 +14,6 @@ if (Platform.OS !== 'web') {
   Marker = RNMaps.Marker;
 }
 
-// --- הגדרות מערכת ---
-const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_KEY || "";
 
 // --- מסד נתונים של בתי חולים בארץ (GPS) ---
 const HOSPITALS_DATABASE = [
@@ -431,9 +429,10 @@ const ECGScreen = () => {
     if (!cameraRef.current) return;
     setScanning(true); setResult(null);
     try {
+      if (!process.env.EXPO_PUBLIC_GEMINI_KEY) { Alert.alert('שגיאה', 'מפתח ה-API חסר ממשתני הסביבה של Vercel!'); }
       const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
       const cleanBase64 = photo.base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
