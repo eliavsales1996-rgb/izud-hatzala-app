@@ -429,15 +429,15 @@ const ECGScreen = () => {
     if (!cameraRef.current) return;
     setScanning(true); setResult(null);
     try {
-      if (!process.env.EXPO_PUBLIC_GEMINI_KEY) { Alert.alert('שגיאה', 'מפתח ה-API חסר ממשתני הסביבה של Vercel!'); }
+      Alert.alert('בדיקת מפתח', 'המפתח מתחיל ב: ' + process.env.EXPO_PUBLIC_GEMINI_KEY?.substring(0, 4));
       const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
       const cleanBase64 = photo.base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [
-            { text: "You are a professional cardiologist. Analyze this ECG strip for rhythm, rate, and STEMI signs. Respond in professional Hebrew." },
+            { text: "אתה קרדיולוג מומחה. נתח את תרשים האק\"ג המצורף. ציין קצב, מהירות, והאם יש עדות ל-STEMI או הפרעות קצב. ענה בעברית מקצועית." },
             { inline_data: { mime_type: "image/jpeg", data: cleanBase64 } }
           ]}],
           safetySettings: [
