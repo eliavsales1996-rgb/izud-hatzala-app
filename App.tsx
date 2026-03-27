@@ -3,8 +3,16 @@ import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, Sta
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Audio } from 'expo-av';
 import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps';
 import * as Speech from 'expo-speech';
+
+// --- ייבוא מותנה של react-native-maps — אינו נתמך בווב/Vercel ---
+let MapView: any = null;
+let Marker: any = null;
+if (Platform.OS !== 'web') {
+  const RNMaps = require('react-native-maps');
+  MapView = RNMaps.default;
+  Marker = RNMaps.Marker;
+}
 
 // --- הגדרות מערכת ---
 const GEMINI_API_KEY = process.env.EXPO_PUBLIC_GEMINI_KEY || "";
@@ -224,6 +232,35 @@ const HospitalsMapScreen = () => {
 
   if (loading) return (<View style={[styles.internalScreen, {justifyContent: 'center'}]}><ActivityIndicator size="large" color="#FF8C00" /><Text style={{color: '#fff', textAlign: 'center', marginTop: 10}}>מאתר מיקום ומחשב טווחי פינוי...</Text></View>);
   if (!location) return (<View style={styles.internalScreen}><Text style={styles.internalTitle}>מפת בתי חולים</Text><Text style={{color: '#ff4444', textAlign: 'center', fontSize: 18}}>אין גישה למיקום (GPS).</Text></View>);
+
+  // גרסת ווב: MapView אינו נתמך — רשימת בתי חולים עם המלצת פינוי
+  if (Platform.OS === 'web') {
+    return (
+      <View style={styles.internalScreen}>
+        <Text style={styles.internalTitle}>מפת בתי חולים</Text>
+        {closestHospital && (
+          <View style={styles.evacBanner}>
+            <Text style={styles.evacBannerTitle}>🚨 המלצת פינוי: הבית החולים הקרוב ביותר</Text>
+            <Text style={styles.evacBannerName}>{closestHospital.name} ({closestHospital.city})</Text>
+            <Text style={styles.evacBannerDistance}>מרחק אווירי: {closestHospital.distance.toFixed(1)} ק"מ</Text>
+          </View>
+        )}
+        <Text style={{color: '#888', textAlign: 'center', fontSize: 13, marginVertical: 10}}>המפה זמינה באפליקציה בלבד. בית החולים הקרוב הוא: {closestHospital?.name}</Text>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {HOSPITALS_DATABASE.map((h, i) => {
+            const isClosest = closestHospital && closestHospital.name === h.name;
+            return (
+              <View key={i} style={[styles.diseaseCard, isClosest && {borderRightColor: '#FF8C00'}]}>
+                <Text style={[styles.diseaseMedical, isClosest && {color: '#FF8C00'}]}>{isClosest ? '⭐ ' : ''}{h.name}</Text>
+                <Text style={styles.diseaseHebrew}>{h.city}</Text>
+              </View>
+            );
+          })}
+          <View style={{height: 100}} />
+        </ScrollView>
+      </View>
+    );
+  }
 
   return (
     <View style={{flex: 1}}>
