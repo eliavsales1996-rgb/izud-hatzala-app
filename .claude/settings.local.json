@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm install:*)",
-      "Bash(npm view:*)"
+      "Bash(npm view:*)",
+      "Bash(curl -s \"https://generativelanguage.googleapis.com/v1beta/models?key=AIzaSyBg5-CwNx1QLu-OIoOzEwGqYa5H25tjnBA\")"
     ]
   }
 }
