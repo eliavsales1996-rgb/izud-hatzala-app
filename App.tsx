@@ -960,7 +960,13 @@ export default function App() {
       
       <View style={styles.topHeader}>
         <TouchableOpacity onPress={() => setActiveTab('HOME')} style={styles.headerIcons}><Text style={styles.iconText}>🏠</Text></TouchableOpacity>
-        <View style={styles.logoContainer}><Text style={styles.headerTitle}>United Hatzalah</Text><Image source={require('./assets/logo.jpg')} style={styles.logo} /></View>
+        <View style={styles.logoContainer}>
+          <View>
+            <Text style={styles.headerTitle}>United Hatzalah</Text>
+            <Text style={styles.headerSubtitle}>נבנה ע"י בוטיגו פתרונות טכנולוגיים לעסקים</Text>
+          </View>
+          <Image source={require('./assets/logo.jpg')} style={styles.logo} />
+        </View>
       </View>
 
       <View style={styles.contentArea}>
@@ -1019,6 +1025,7 @@ const styles = StyleSheet.create({
   topHeader: { backgroundColor: '#FF8C00', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 15, borderBottomLeftRadius: 20, borderBottomRightRadius: 20 },
   logoContainer: { flexDirection: 'row', alignItems: 'center' },
   headerTitle: { fontSize: 22, fontWeight: '900', color: '#000', marginRight: 10 },
+  headerSubtitle: { fontSize: 10, fontWeight: '700', color: '#000', marginRight: 10, marginTop: 2 },
   logo: { width: 35, height: 35, resizeMode: 'contain' },
   headerIcons: { width: 40, height: 40, backgroundColor: 'rgba(0,0,0,0.15)', borderRadius: 20, justifyContent: 'center', alignItems: 'center' },
   iconText: { fontSize: 20 },
