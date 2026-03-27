@@ -508,12 +508,12 @@ const ECGScreen = () => {
     setScanning(true); setResult(null);
     try {
       const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.1 });
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           contents: [{ parts: [
-            { text: "אתה פראמדיק מומחה. נתח את תרשים האק\"ג המצורף. ציין קצב, מהירות, והאם יש עדות ל-STEMI או הפרעות קצב. ענה בעברית." },
+            { text: "You are a professional cardiologist. Analyze this ECG strip. Identify rhythm, rate, and check for STEMI signs. Answer in professional Hebrew." },
             { inline_data: { mime_type: "image/jpeg", data: photo.base64 } }
           ]}],
           safetySettings: [{ category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }]
