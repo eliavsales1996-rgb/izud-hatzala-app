@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, StatusBar, TextInput, Image, Platform, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView, TouchableOpacity, ScrollView, StatusBar, TextInput, Image, Platform, ActivityIndicator } from 'react-native';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Audio } from 'expo-av';
 import * as Location from 'expo-location';
@@ -429,10 +429,14 @@ const ECGScreen = () => {
     if (!cameraRef.current) return;
     setScanning(true); setResult(null);
     try {
-      Alert.alert('בדיקת מפתח', 'המפתח מתחיל ב: ' + process.env.EXPO_PUBLIC_GEMINI_KEY?.substring(0, 4));
+      const apiKey = process.env.EXPO_PUBLIC_GEMINI_KEY || '';
+      if (!apiKey) {
+        setResult('❌ מפתח API חסר! הגדר EXPO_PUBLIC_GEMINI_KEY בהגדרות Vercel.');
+        setScanning(false); return;
+      }
       const photo = await cameraRef.current.takePictureAsync({ base64: true, quality: 0.5 });
       const cleanBase64 = photo.base64.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${process.env.EXPO_PUBLIC_GEMINI_KEY}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -452,11 +456,11 @@ const ECGScreen = () => {
       if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
         setResult(data.candidates[0].content.parts[0].text);
       } else if (data.error) {
-        setResult('❌ שגיאת שרת מגוגל: ' + (data.error?.message || JSON.stringify(data.error)));
+        setResult(`❌ שגיאה (HTTP ${response.status}):\n${data.error?.message || JSON.stringify(data.error)}\n\nמפתח: ${apiKey.substring(0, 8)}...`);
       } else {
-        setResult(`⚠️ שגיאה לא צפויה:\n${JSON.stringify(data)}`);
+        setResult(`⚠️ תשובה לא צפויה (HTTP ${response.status}):\n${JSON.stringify(data)}`);
       }
-    } catch (e) { setResult(`❌ תקלה באפליקציה:\n${e.message}`); }
+    } catch (e) { setResult(`❌ תקלת רשת:\n${e.message}`); }
     finally { setScanning(false); }
   };
 
